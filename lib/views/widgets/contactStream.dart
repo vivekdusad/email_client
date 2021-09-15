@@ -1,3 +1,4 @@
+import 'package:email_client/helper/observer.dart';
 import 'package:email_client/user.dart';
 import 'package:flutter/material.dart';
 
@@ -7,31 +8,60 @@ class ContactStreamWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<User>>(
+    return Observer<List<User>>(
+      
       stream: stream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active ||
-            snapshot.connectionState == ConnectionState.done) {
-          final users = snapshot.data;
-          return ListView.separated(
-              separatorBuilder: (_, __) => Divider(),
-              itemCount: users!.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(users[index].name![0]),
+      onSuccess: (context, users) => ListView.separated(
+          separatorBuilder: (_, __) => Divider(),
+          itemCount: users!.length,
+          itemBuilder: (context, index) {
+            return ExpansionTile(
+              trailing: null,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    children: [
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.call,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.message,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.video_call,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Spacer(),
+                    ],
                   ),
-                  title: Text(
-                    users[index].name.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                  subtitle: Text(users[index].email.toString()),
-                );
-              });
-        }
-        return Center(child: CircularProgressIndicator());
-      },
+                )
+              ],
+              leading: CircleAvatar(
+                child: Text(users[index].name![0]),
+              ),
+              title: Text(
+                users[index].name.toString(),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              subtitle: Text(users[index].email.toString()),
+            );
+          }),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:email_client/managers/contactManager.dart';
+import 'package:email_client/overseer.dart';
 import 'package:email_client/views/calanderscreen.dart';
 import 'package:email_client/views/contactscreen.dart';
 import 'package:email_client/views/inboxscreen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
@@ -21,8 +23,8 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<ContactManager>(
-      create:(context)=> ContactManager(),
+    return Provider<OverSeer>(
+      create:(context)=> OverSeer(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.indigo, accentColor: Colors.red),

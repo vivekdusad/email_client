@@ -1,5 +1,7 @@
+import 'package:email_client/helper/observer.dart';
 import 'package:email_client/helper/search_delegate.dart';
 import 'package:email_client/managers/contactManager.dart';
+import 'package:email_client/overseer.dart';
 import 'package:email_client/views/widgets/contactStream.dart';
 import 'package:email_client/views/widgets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -10,42 +12,36 @@ class ContactsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ContactManager contactManager = Provider.of<ContactManager>(context);
+    final ContactManager contactManager =
+        Provider.of<OverSeer>(context).fetch(ContactManager);
+    contactManager.inFilter.add('');
     return Scaffold(
         appBar: AppBar(
           title: Text("Contacts"),
           actions: [
             Chip(
-              label: StreamBuilder<int>(
-                  stream: contactManager.counterStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active ||
-                        snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        return Text(
-                          snapshot.data.toString(),
-                          style: TextStyle(color: Colors.white),
-                        );
-                      }
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
+              label: Observer<int>(
+                stream: contactManager.count$,
+                onSuccess: (context, data) {
+                  return Text(
+                    data.toString(),
+                    style: TextStyle(color: Colors.white),
+                  );
+                },
+              ),
               backgroundColor: Colors.red,
             ),
             IconButton(
                 onPressed: () {
                   showSearch(
-                      context: context,
-                      delegate: ContactSearchDelegate());
+                      context: context, delegate: ContactSearchDelegate());
                 },
                 icon: Icon(Icons.search))
           ],
         ),
         drawer: DrawerWidget(),
         body: ContactStreamWidget(
-          stream: contactManager.getUsers(),
+          stream: contactManager.browse$,
         ));
   }
 }

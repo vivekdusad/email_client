@@ -1,5 +1,5 @@
 import 'package:email_client/managers/contactManager.dart';
-import 'package:email_client/user.dart';
+import 'package:email_client/overseer.dart';
 import 'package:email_client/views/widgets/contactStream.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,23 +28,26 @@ class ContactSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    _contactManger = Provider.of<ContactManager>(context);
+    _contactManger = Provider.of<OverSeer>(context).fetch(ContactManager);
+
     if (query.length < 3) {
       return Container();
     }
+    _contactManger!.inFilter.add(query);
     return ContactStreamWidget(
-      stream: _contactManger!.getUsers(),
+      stream: _contactManger!.browse$,
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    _contactManger = Provider.of<ContactManager>(context);
+    _contactManger = Provider.of<OverSeer>(context).fetch(ContactManager);
     if (query.length < 3) {
       return Container();
     }
+    _contactManger!.inFilter.add(query);
     return ContactStreamWidget(
-      stream: _contactManger!.getUsers(),
+      stream: _contactManger!.browse$,
     );
   }
 }

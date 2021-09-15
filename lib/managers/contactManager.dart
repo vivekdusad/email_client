@@ -4,19 +4,32 @@ import 'package:email_client/service/user_service.dart';
 import 'package:email_client/user.dart';
 import 'package:rxdart/rxdart.dart';
 
-List<String> CONTACT = ["User 1", "User 2", "User 3", "User 4"];
-
 class ContactManager {
-  Stream<List<User>> getUsers() async* {
-    yield await UserService().browse();
-  }
+  final BehaviorSubject<int> _controllerSubject = BehaviorSubject<int>();
+  final PublishSubject<String> _filterSubject = PublishSubject<String>();
+  final PublishSubject<List<User>> _collectionSubject = PublishSubject();
 
-  StreamController<int> _controller = BehaviorSubject<int>();
-  Stream<int> get counterStream => _controller.stream;
+  Sink<String> get inFilter => _filterSubject.sink;
+
+  Stream<List<User>> get browse$ => _collectionSubject.stream;
+  Stream<int> get count$ => _controllerSubject.stream;
 
   ContactManager() {
-    getUsers().listen((event) {
-      _controller.add(event.length);
+    print("called");
+
+    _filterSubject.debounceTime(Duration(seconds: 1)).listen((filter) async {
+      var users = await UserService.browse(filter: filter);
+      print(users.length);
+      _collectionSubject.add(users);
     });
+    _collectionSubject.listen((event) {
+      _controllerSubject.add(event.length);
+    });
+  }
+
+  void dispose() {
+    _collectionSubject.close();
+    _filterSubject.close();
+    _controllerSubject.close();
   }
 }
