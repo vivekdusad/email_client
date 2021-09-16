@@ -6,7 +6,7 @@ import 'package:http/http.dart';
 
 class UserService {
   static Future<List<User>> browse({String? filter}) async {
-    String url = "https://5b56-103-157-168-33.ngrok.io/contacts?name=$filter";
+    String url = "https://6931-103-157-168-33.ngrok.io/contacts?name=$filter";
     print(url);
     Response respone = await http.get(Uri.parse(url));
     List list = jsonDecode(respone.body);

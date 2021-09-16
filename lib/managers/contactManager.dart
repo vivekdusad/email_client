@@ -14,12 +14,10 @@ class ContactManager {
   Stream<List<User>> get browse$ => _collectionSubject.stream;
   Stream<int> get count$ => _controllerSubject.stream;
 
-  ContactManager() {
-    print("called");
-
-    _filterSubject.debounceTime(Duration(seconds: 1)).listen((filter) async {
-      var users = await UserService.browse(filter: filter);
-      print(users.length);
+  ContactManager() {   
+    _filterSubject.debounceTime(Duration(seconds: 1)).switchMap((filter) async*{
+      yield await UserService.browse(filter: filter);
+    }).listen((users) async { 
       _collectionSubject.add(users);
     });
     _collectionSubject.listen((event) {

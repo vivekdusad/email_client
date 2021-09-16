@@ -1,7 +1,9 @@
+import 'package:email_client/views/message_compose.dart';
 import 'package:flutter/material.dart';
 import 'widgets/drawer.dart';
 import 'home.dart';
 import 'others.dart';
+
 class InboxScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,16 +24,15 @@ class InboxScreen extends StatelessWidget {
               ],
             ),
             actions: [
-              IconButton(
-                  onPressed: () {
-                    
-                  },
-                  icon: Icon(Icons.restart_alt))
+              IconButton(onPressed: () {}, icon: Icon(Icons.restart_alt))
             ],
           ),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MessageCompose()));
+            },
           ),
           drawer: DrawerWidget(),
           body: TabBarView(children: [HomePage(), OthersPage()])),

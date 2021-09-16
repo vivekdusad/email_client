@@ -1,4 +1,3 @@
-import 'package:email_client/managers/contactManager.dart';
 import 'package:email_client/overseer.dart';
 import 'package:email_client/views/calanderscreen.dart';
 import 'package:email_client/views/contactscreen.dart';
@@ -27,7 +26,7 @@ class _AppState extends State<App> {
       create:(context)=> OverSeer(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.indigo, accentColor: Colors.red),
+        theme: ThemeData(colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.indigo).copyWith(secondary: Colors.red)),
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
             onTap: (index) {
